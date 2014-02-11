@@ -5,7 +5,7 @@ module Cedilla
     attr_reader :names
     
     def initialize
-      conf = YAML.load_file('./config/services.yaml')
+      conf = YAML.load_file("#{Cedilla::Aggregator::CONFIG_PATH}/services.yaml")
       
       @names = conf['services'].collect{ |key,val| "#{key}" }
       @service_configs = conf['services']

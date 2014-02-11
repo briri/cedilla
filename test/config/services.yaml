@@ -1,0 +1,21 @@
+# Service specific configurations
+services:
+  
+  google_books:
+    disabled: false
+    max_attempts: 3
+    base_url: 'http://books.google.com/books'
+    translator: 'google_books'
+
+    url_query:
+      hl: 'en'
+
+  amazon:
+    disabled: false
+    max_attempts: 3
+    base_url: 'http://www.amazon.com/s/'
+    translator: 'amazon'
+
+    url_query:
+      url: 'search-alias=stripbooks'
+

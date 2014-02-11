@@ -1,0 +1,45 @@
+# Group services into the genres they can search
+genres:
+  journal:
+    - google_books
+    - amazon
+  book:
+    - google_books
+    - amazon
+  issue:
+    - google_books
+  article:
+    - google_books
+
+# Unknown genre mapping:
+unknown_genres:
+  theses: dissertation
+  newspaper: document
+
+# Group services into the type of content they can provide
+content_types:
+  full_text:
+    - google_books
+    - amazon
+  purchase:
+    - amazon
+
+# Define the minimum amount of citation information required to process a service. The options MUST match attributes on the Citation object!
+# Items within an array indicate an OR relationship and items on different lines indicate an AND relationship so:
+#
+#    article:
+#      - 'article_title'
+#      - ['title', 'journal_title']
+#
+#   Translates to:  citation includes -> an Article Title AND (a Title OR a Journal Title)
+minimum_citation_groups:
+  book:
+    - ['title', 'book_title', 'IDENTIFIER']
+  journal:
+    - ['title', 'journal_title', 'IDENTIFIER']
+  issue:
+    - ['title', 'journal_title', 'article_title', 'IDENTIFIER']
+    - ['volume', 'issue', 'date', 'article_number', 'enumeration', 'season', 'quarter', 'part']
+  article:
+    - 'article_title'
+    - ['title', 'journal_title', 'IDENTIFIER']

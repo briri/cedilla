@@ -1,14 +1,17 @@
 # Mapping of citation object properties to their openurl arguments
-genre: 'rft.genre'
-content_type: 'rft.content'
 
+# Any identifiers need to be defined as a hash
 issn: 'rft.issn'
 eissn: 'rft.eissn'
 isbn: 'rft.isbn'
-eisbn: 'rft.eisbn'
 oclc: 'rft.oclcnum'
 lccn: 'rft.lccn'
-doi: 'rft.doi'
+svc_specific_id_1: 'rft.pubmed'
+svc_specific_id_2: 'rft.dissertation'
+
+# All other identifier translations can be defined on a one-one basis
+genre: 'rft.genre'
+content_type: 'rft.content'
 
 title: 'rft.title'
 article_title: 'rft.atitle'

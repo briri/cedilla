@@ -27,7 +27,7 @@ module Cedilla
           end
         
           # If the citation has enough information for the service
-          if @rules.can_dispatch(service.name, citation.group)
+          if @rules.can_dispatch_to_service?(service.name, citation.group)
             begin
               # Dispatch each service as a deferable event so that they can run simultaneously
               EventMachine.defer(operation, callback) 

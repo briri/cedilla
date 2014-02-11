@@ -1,0 +1,16 @@
+# ---------------------------------------------------------------------------------
+# General settings
+# ---------------------------------------------------------------------------------
+organization_name: 'My Test Organization'
+application_name: 'Delivery Aggregator'
+application_description: 'Delivery aggregation service for library resources'
+
+# ---------------------------------------------------------------------------------
+# Webserver settings 
+# ---------------------------------------------------------------------------------
+server_type: 'thin'
+server_host: 'localhost'
+server_port: 3000
+
+session_secret: 'abcd1234'
+session_expires: 900
