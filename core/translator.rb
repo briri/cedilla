@@ -100,14 +100,15 @@ module Cedilla
 # Convert the Citation object to JSON
 # --------------------------------------------------------------------------------------------------------------------    
     def self.citation_to_json(citation)
-      Cedilla::Citation.new.to_json
+      puts "json -> #{citation.to_json}"
+      citation.to_json
     end
 
 # --------------------------------------------------------------------------------------------------------------------
 # Convert the Array of Resource Objects into JSON
 # --------------------------------------------------------------------------------------------------------------------    
     def self.resources_to_json(resources)
-      [Cedilla::Resource.new].to_json
+      resources.to_json
     end
     
 private

@@ -13,9 +13,6 @@ module Cedilla
     
     attr_accessor :title, :article_title, :journal_title, :book_title, :short_title
     
-    attr_accessor :author_full_name, :author_last_name, :author_first_name, :author_suffix, :author_organization
-    attr_accessor :author_middle_initial, :author_first_initial, :author_initials
-    
     attr_accessor :publisher, :publication_date, :publication_place, :publication_date
     
     attr_accessor :date, :volume, :issue, :article_number, :enumeration, :season, :quarter, :part, :edition
@@ -23,11 +20,12 @@ module Cedilla
     
     attr_accessor :others # This attribute is meant to store undefined citation parameters that came in from the client
 
-    attr_accessor :resources
+    attr_accessor :resources, :authors
 
     def initialize
       @others = []
       @resources = []
+      @authors = []
     end
 
 # --------------------------------------------------------------------------------------------------------------------
@@ -60,6 +58,17 @@ module Cedilla
     def identifiers
       {'issn' => @issn, 'eissn' => @eissn, 'isbn' => @isbn, 'eisbn' => @eisbn, 'oclc' => @oclc, 'lccn' => @lccn, 'doi' => @doi,
            'svc_specific_id_1' => @svc_specific_id_1, 'svc_specific_id_2' => @svc_specific_id_2, 'svc_specific_id_3' => @svc_specific_id_3}
+    end
+    
+    def to_json
+      {:genre => @genre, :content_type => @content_type,
+       :subject => @subject, :cover_image => @cover_image, :synopsis => @synopsis,  
+       :issn => @issn, :eissn => @eissn, :isbn => @isbn, :eisbn => @eisbn, :oclc => @oclc, :lccn => @lccn, :doi => @doi,
+       :svc_specific_ids => [@svc_specific_ids, @svc_specific_id_2, @svc_specific_id_3],
+       :title => @title, :article_title => @article_title, :journal_title => @journal_title, :book_title => @book_title, :short_title => @short_title,
+       :publisher => @publisher, :publication_date => @publication_date, :publication_place => @publication_place, :publication_date => @publication_date,
+       :date => @date, :volume => @volume, :issue => @issue, :article_number => @article_number, :enumeration => @enumeration, :season => @season, 
+       :quarter => @quarter, :part => @part, :edition => @edition, :start_page => @start_page, :end_page => @end_page, :pages => @pages}
     end
     
   end

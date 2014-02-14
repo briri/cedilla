@@ -11,11 +11,11 @@ module Cedilla
 # Intended to be overwritten by the implementing service
 # ---------------------------------------------------------------------------------------------------
     def process(response)
-      
+      return nil
     end
 
     def build_target
-    
+      return nil
     end
     
 # ---------------------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ module Cedilla
 
 # ---------------------------------------------------------------------------------------------------    
     def submit(citation)
-      
+      return nil
     end
     
     

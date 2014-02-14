@@ -40,12 +40,15 @@ module Cedilla
         items.each do |item|
           
           if item.is_a?(Cedilla::Citation)
+            puts "citation to json - #{Cedilla::Translator.citation_to_json(item)} - #{item.class}"
             client << Cedilla::Translator.citation_to_json(item)
             
           elsif item.is_a?(Cedilla::Resource)
-              client << Cedilla::Translator.resource_to_json(item)
+            puts "resources to json - #{Cedilla::Translator.resource_to_json(item)} - #{item.class}"
+            client << Cedilla::Translator.resource_to_json(item)
               
           else
+            puts "genric message - #{item.to_s}"
             client << item.to_s
           end
           
