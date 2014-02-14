@@ -25,8 +25,9 @@ class TestTranslator < Test::Unit::TestCase
     assert !citation.others.nil?, "Should have collected undefined params for the default translation!"
     
     # Test to make sure the translation file is properly loading the citation object
-    citation = Cedilla::Translator.query_string_to_citation("openurl", "#{@openurl}&issn=0000-0001")
-    assert_equal "1234-1234", citation.identifiers['issn'], "Should have returned the ISSN for 'rft.issn' instead of 'issn' because a translation file WAS provided!"
+    citation = Cedilla::Translator.query_string_to_citation("openurl", "#{@openurl}&isbn=0000-0001")
+    assert_equal "1234-1234", citation.issn, "Should have returned the ISSN for 'rft.issn' instead of 'issn' because a translation file WAS provided!"
+    assert_equal "0000-0001", citation.isbn, "Should have returned the ISBN!"
     assert !citation.article_title.nil?, "An article title should have been loaded for the openurl translation format!"
     assert !citation.genre.nil?, "The genre was not loaded for the openurl translation format!"
     assert !citation.title.nil?, "The title was not loaded for the openurl translation format!"

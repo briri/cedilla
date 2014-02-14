@@ -19,15 +19,15 @@ class TestBroker < Test::Unit::TestCase
     assert_equal 2, @connection.count, "Expected there to be responses from both of the mock services! #{@connection.inspect}"
     
     @connection.each do |message|
-    
+      puts message
     end
   end
   
 # --------------------------------------------------------------------------------------------------------------------
   def get_citation(params)
-    citation = Cedilla::Citation.new
-    params.each{ |key,val| citation.method("#{key}=").call(val) if citation.respond_to?("#{key}=") }
-    citation
+    Cedilla::Citation.new(params)
+    #params.each{ |key,val| citation.method("#{key}=").call(val) if citation.respond_to?("#{key}=") }
+    #citation
   end
   
 end

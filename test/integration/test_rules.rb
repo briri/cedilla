@@ -106,9 +106,9 @@ class TestRules < Test::Unit::TestCase
   
 # --------------------------------------------------------------------------------------------------------------------
   def get_citation(params)
-    citation = Cedilla::Citation.new
-    params.each{ |key,val| citation.method("#{key}=").call(val) if citation.respond_to?("#{key}=") }
-    citation
+    Cedilla::Citation.new(params)
+    #params.each{ |key,val| citation.method("#{key}=").call(val) if citation.respond_to?("#{key}=") }
+    #citation
   end
   
 end

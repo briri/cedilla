@@ -4,6 +4,8 @@ module Cedilla
     
     attr_accessor :genre, :content_type
     
+    attr_accessor :resources
+    
     # These items are updated by the services and sent back to the requestor (- quick_link is the best electronic copy of the item )
     attr_accessor :subject, :cover_image, :synopsis, :quick_link
     
@@ -11,21 +13,36 @@ module Cedilla
     attr_accessor :issn, :eissn, :isbn, :eisbn, :oclc, :lccn, :doi
     attr_accessor :svc_specific_id_1, :svc_specific_id_2, :svc_specific_id_3
     
+    # Titles
     attr_accessor :title, :article_title, :journal_title, :book_title, :short_title
     
+    # Author attributes
+    attr_accessor :author_full_name, :author_last_name, :author_first_name, :author_suffix
+    attr_accessor :author_middle_initial, :author_first_initial, :author_initials, :author_organization
+    
+    # Publisher attributes
     attr_accessor :publisher, :publication_date, :publication_place, :publication_date
     
+    # Detailed search attributes
     attr_accessor :date, :volume, :issue, :article_number, :enumeration, :season, :quarter, :part, :edition
     attr_accessor :start_page, :end_page, :pages
     
-    attr_accessor :others # This attribute is meant to store undefined citation parameters that came in from the client
+    # This attribute is meant to store undefined citation parameters that came in from the client
+    attr_accessor :others 
 
-    attr_accessor :resources, :authors
-
-    def initialize
+# --------------------------------------------------------------------------------------------------------------------    
+    def initialize(params)
       @others = []
       @resources = []
-      @authors = []
+      
+      # Assign the appropriate params to their attributes, place everything else in others
+      params.each do |key,val|
+        if self.respond_to?("#{key}=")
+          self.method("#{key}=").call(val)
+        else
+          self.others << "#{key}=#{val}"
+        end
+      end
     end
 
 # --------------------------------------------------------------------------------------------------------------------
@@ -61,6 +78,8 @@ module Cedilla
     end
     
     def to_json
+      # TODO: reformat this so we don't pass nulls!!
+      
       {:genre => @genre, :content_type => @content_type,
        :subject => @subject, :cover_image => @cover_image, :synopsis => @synopsis,  
        :issn => @issn, :eissn => @eissn, :isbn => @isbn, :eisbn => @eisbn, :oclc => @oclc, :lccn => @lccn, :doi => @doi,

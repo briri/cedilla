@@ -7,7 +7,7 @@ module Cedilla
 # --------------------------------------------------------------------------------------------------------------------
 # Uses the translation mapping file to parse the query string into a Citation object
 # --------------------------------------------------------------------------------------------------------------------
-    def self.query_string_to_citation(service_translation, query_string)
+    def self.query_string_to_citation(service_translation, query_string)   
       hash = {}; ids = {}
       config = load_config(service_translation).invert
       
@@ -17,33 +17,22 @@ module Cedilla
         hash["#{key_vals[0]}"] = key_vals[1]
       end
       
-      citation = Cedilla::Citation.new
+      params = {}
       
       # If a translation service was defined, use it to find the correct the properties
-      unless config.empty?        
-        hash.each do |key,val| 
-          if citation.respond_to?("#{config[key]}=")
-            citation.method("#{config[key]}=").call(URI.unescape(val))  
-  
-          else            
-            # If the citation object doesn't understand the parameter, just stuff it into the others array
-            citation.others << "#{config[key].nil? ? key : config[key]}=#{URI.unescape(val)}"
-          end
-        end 
-        
-      else        
-        # Else just try to match the property names to items in the query string
-        hash.each do |key,val| 
-          if citation.respond_to?("#{key}=")
-            citation.method("#{URI.unescape(key)}=").call(URI.unescape(val))  
+      hash.each do |key,val| 
+        unless config.empty?
+          unless config[URI.unescape(key).gsub(' ', '_')].nil?  
+            params["#{config[URI.unescape(key).gsub(' ', '_')]}"] = URI.unescape(val)
           else
-            # If the citation object doesn't understand they parameter, just stuff it into the others array
-            citation.others << "#{URI.unescape(key)}=#{URI.unescape(val)}"
+            params["#{URI.unescape(key).gsub(' ', '_')}"] = URI.unescape(val)
           end
+        else
+          params["#{URI.unescape(key).gsub(' ', '_')}"] = URI.unescape(val)
         end
       end
       
-      citation
+      Cedilla::Citation.new(params)
     end
     
 # --------------------------------------------------------------------------------------------------------------------
@@ -67,7 +56,7 @@ module Cedilla
           citation.methods.keep_if{ |symb| symb.id2name[-1] == '=' and symb.id2name != '!=' }.each do |attr|
             prop = attr.to_s.gsub('=', '')
             
-            if citation.respond_to?("#{prop}") and prop != 'others'
+            if citation.respond_to?("#{prop}") and !['others', 'resources'].include?(prop)
               query += "&#{URI.escape(prop)}=#{URI.escape(citation.method("#{prop}").call.to_s)}" unless citation.method("#{prop}").call.nil? 
             end
           end
@@ -100,7 +89,7 @@ module Cedilla
 # Convert the Citation object to JSON
 # --------------------------------------------------------------------------------------------------------------------    
     def self.citation_to_json(citation)
-      puts "json -> #{citation.to_json}"
+      #puts "json -> #{citation.to_json}"
       citation.to_json
     end
 
