@@ -11,12 +11,16 @@ module Cedilla
       @service_configs = conf['services']
     end
     
-    def create(name)
-      conf = @service_configs[name]
+    def create(service_name)
+      conf = @service_configs[service_name]
+      
+      parts = service_name.split('_')
+      name = parts.collect{ |part| "#{part.capitalize}" }.join('')
+      
+puts "svc name: #{name}"
       
       # Try to load the service's specific class definition otherwise use the default Service class
-      klass = Object.const_defined?("#{name.capitalize}Service") ? Object.const_get("#{name.capitalize}Service") : 
-                                                                   Object.const_get("Cedilla").const_get("Service")
+      klass = Object.const_defined?("#{name}Service") ? Object.const_get("#{name}Service") : Object.const_get("Cedilla").const_get("Service")
       klass.new(conf)
     end
     

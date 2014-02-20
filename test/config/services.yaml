@@ -1,4 +1,15 @@
 # Service specific configurations
+
+# ==============================================================================================================================================
+# WARNING!!!
+#   The google_books and amazon services defined below are required by several of the tests:
+#
+#     - test_broker  <- Defines mock implementations for both of these services
+#     - 
+#
+# It is recommended that you add additional services if you want to test additional functionality rather than modifying these services!
+#
+# ==============================================================================================================================================
 services:
   
   google_books:

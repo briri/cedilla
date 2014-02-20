@@ -32,3 +32,18 @@ class TestService < Test::Unit::TestCase
   end
   
 end
+
+# --------------------------------------------------------------------------------------------------------------------
+# Mock service for testing
+# --------------------------------------------------------------------------------------------------------------------
+class AmazonService < Cedilla::Service
+    def submit(citation)
+      
+      citation.author_full_name = 'Doe, John'
+      citation.abstract = 'This is an example abstract returned from our test service to augment the citation.'
+      
+      citation.resources << Cedilla::Resource.new({:source => 'Some website', :location => nil, :target => 'http://www.ucop.edu', :format => 'electronic'})
+      
+      citation
+    end
+end

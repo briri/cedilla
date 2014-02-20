@@ -70,6 +70,13 @@ module Cedilla
         
       end
     end
+
+# --------------------------------------------------------------------------------------------------------------------
+# Convert the JSON input into a Citation object
+# --------------------------------------------------------------------------------------------------------------------
+  def self.hash_to_query_string(hash)
+
+  end
     
 # --------------------------------------------------------------------------------------------------------------------
 # Convert the JSON input into a Citation object
@@ -85,21 +92,6 @@ module Cedilla
       [Cedilla::Resource.new]
     end
 
-# --------------------------------------------------------------------------------------------------------------------
-# Convert the Citation object to JSON
-# --------------------------------------------------------------------------------------------------------------------    
-    def self.citation_to_json(citation)
-      #puts "json -> #{citation.to_json}"
-      citation.to_json
-    end
-
-# --------------------------------------------------------------------------------------------------------------------
-# Convert the Array of Resource Objects into JSON
-# --------------------------------------------------------------------------------------------------------------------    
-    def self.resources_to_json(resources)
-      resources.to_json
-    end
-    
 private
     def self.load_config(config_name)
       path = "#{Cedilla::Aggregator::TRANSLATION_PATH}/#{config_name.downcase}.yaml"

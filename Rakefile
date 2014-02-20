@@ -6,6 +6,12 @@ Rake::TestTask.new(:test_app) do |t|
   t.test_files = FileList['test/integration/test*.rb']
 end
 
+Rake::TestTask.new(:test_controllers) do |t|
+  ENV['TESTOPTS'] ||= '-v' # default to verbose
+  t.libs << "test"
+  t.test_files = FileList['test/integration/test_*_controller.rb']
+end
+
 Rake::TestTask.new(:test_services) do |t|
   ENV['TESTOPTS'] ||= '-v' # default to verbose
   t.libs << "test"

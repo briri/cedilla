@@ -10,8 +10,8 @@ module Cedilla
 # ---------------------------------------------------------------------------------------------------
 # Intended to be overwritten by the implementing service
 # ---------------------------------------------------------------------------------------------------
-    def process(response)
-      return nil
+    def process(original_citation, response = nil)
+      return Cedilla::Citation.new({:title => 'Unimplemented service', :abstract => "This service has not yet been implemented! This is the generic message."})
     end
 
     def build_target
@@ -44,10 +44,16 @@ module Cedilla
 
 # ---------------------------------------------------------------------------------------------------    
     def submit(citation)
-      return nil
+      # Check to make sure we have the minimum requirements
+      
+      # Build out the URL to the target
+      self.build_target
+      
+      # Call the target
+      
+      # Process the results
+      self.process(citation)
     end
-    
-    
-  end
   
+  end
 end

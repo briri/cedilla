@@ -7,7 +7,7 @@ module Cedilla
     attr_accessor :resources
     
     # These items are updated by the services and sent back to the requestor (- quick_link is the best electronic copy of the item )
-    attr_accessor :subject, :cover_image, :synopsis, :quick_link
+    attr_accessor :subject, :cover_image, :abstract, :quick_link
     
     # Identifiers
     attr_accessor :issn, :eissn, :isbn, :eisbn, :oclc, :lccn, :doi
@@ -31,9 +31,9 @@ module Cedilla
     attr_accessor :others 
 
 # --------------------------------------------------------------------------------------------------------------------    
-    def initialize(params)
-      @others = []
-      @resources = []
+    def initialize(params = {})
+      @others = Set.new  # Set prevents duplicates automatically
+      @resources = Set.new  # Set prevents duplicates automatically!
       
       # Assign the appropriate params to their attributes, place everything else in others
       params.each do |key,val|
@@ -44,19 +44,23 @@ module Cedilla
         end
       end
     end
+    
+# --------------------------------------------------------------------------------------------------------------------    
+# Establish the primary key for the object: identifiers and titles
+# --------------------------------------------------------------------------------------------------------------------    
+    def ==(object)
+      return false unless object.is_a?(self.class)
+    
+      self.identifiers == object.identifiers and self.title == object.title and self.journal_title == object.journal_title and
+      self.book_title == object.book_title and self.article_title == object.article_title
+    end
 
 # --------------------------------------------------------------------------------------------------------------------
 # Determine whether or not the citation is valid
 # --------------------------------------------------------------------------------------------------------------------
     def valid?
       # A Citation MUST have a genre and a content type
-      ret = (!@genre.nil? and @genre != '' and !@content_type.nil? and @content_type != '')
-
-      # A Citation MUST have at least one Identifier or at least one title
-      ret = ((self.has_identifier?) or
-                  (!@title.nil? and @title != '') or (!@article_title.nil? and @article_title != '') or 
-                  (!@journal_title.nil? and @journal_title != '') or (!@book_title.nil? and @book_title != '')) if ret
-      ret
+      !@genre.nil? and @genre != '' and !@content_type.nil? and @content_type != ''
     end
 
 # --------------------------------------------------------------------------------------------------------------------
@@ -70,6 +74,15 @@ module Cedilla
     end
     
 # --------------------------------------------------------------------------------------------------------------------
+# Determine whether the resource exists.
+# --------------------------------------------------------------------------------------------------------------------
+    def has_resource?(resource)
+      ret = false
+      self.resources.each{ |rsc| ret = true if rsc == resource }
+      ret
+    end
+    
+# --------------------------------------------------------------------------------------------------------------------
 # Return all of the identifiers for the citation
 # --------------------------------------------------------------------------------------------------------------------
     def identifiers
@@ -77,17 +90,33 @@ module Cedilla
            'svc_specific_id_1' => @svc_specific_id_1, 'svc_specific_id_2' => @svc_specific_id_2, 'svc_specific_id_3' => @svc_specific_id_3}
     end
     
-    def to_json
-      # TODO: reformat this so we don't pass nulls!!
+# ---------------------------------------------------------------------------------------------------
+# Determine whether or not the 
+# ---------------------------------------------------------------------------------------------------
+    def dispatchable?
+      Cedilla::Rules.new.has_minimum_citation_requirements?(self)
+    end
+
+# --------------------------------------------------------------------------------------------------------------------
+    def to_s
+      "genre: '#{@genre}', content_type: '#{@content_type}', " + identifiers.select{ |x,y| !y.nil? }.map{ |x,y| "#{x}: '#{y}'" }.join(', ')
+    end
+    
+# --------------------------------------------------------------------------------------------------------------------
+# Override the basic to_json method
+# --------------------------------------------------------------------------------------------------------------------
+    def to_hash
+      ret = {}
       
-      {:genre => @genre, :content_type => @content_type,
-       :subject => @subject, :cover_image => @cover_image, :synopsis => @synopsis,  
-       :issn => @issn, :eissn => @eissn, :isbn => @isbn, :eisbn => @eisbn, :oclc => @oclc, :lccn => @lccn, :doi => @doi,
-       :svc_specific_ids => [@svc_specific_ids, @svc_specific_id_2, @svc_specific_id_3],
-       :title => @title, :article_title => @article_title, :journal_title => @journal_title, :book_title => @book_title, :short_title => @short_title,
-       :publisher => @publisher, :publication_date => @publication_date, :publication_place => @publication_place, :publication_date => @publication_date,
-       :date => @date, :volume => @volume, :issue => @issue, :article_number => @article_number, :enumeration => @enumeration, :season => @season, 
-       :quarter => @quarter, :part => @part, :edition => @edition, :start_page => @start_page, :end_page => @end_page, :pages => @pages}
+      self.methods.each do |method|
+        name = method.id2name.gsub('=', '')
+        val = self.method(name).call if method.id2name[-1] == '=' and self.respond_to?(name)  
+        ret["#{name}"] = val unless val.nil? or ['!', 'others', 'resources'].include?(name)
+      end
+      
+      ret["resources"] = self.resources.collect { |resource| resource.to_hash }
+      
+      ret
     end
     
   end

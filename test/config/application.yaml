@@ -14,3 +14,6 @@ server_port: 3000
 
 session_secret: 'abcd1234'
 session_expires: 900
+
+broker_timeout: 60000 # 30 seconds
+broker_bad_citation_message: 'Invalid citation genre and/or content_type'

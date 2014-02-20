@@ -1,4 +1,8 @@
 # Group services into the genres they can search
+# ==============================================================================================================================================
+# WARNING!!!
+#   Changes to the following 3 entries will impact: test_broker.negotiate, test_rules.*
+# ==============================================================================================================================================
 genres:
   journal:
     - google_books
@@ -32,6 +36,17 @@ content_types:
 #      - ['title', 'journal_title']
 #
 #   Translates to:  citation includes -> an Article Title AND (a Title OR a Journal Title)
+#
+#   You may use the keyword IDENTIFIER as a shortcut for (issn or eissn or isbn or eisbn or doi or lccn or oclc or one of the 3 service specific ids)
+#   For example:
+#
+#    book:
+#      - ['title', 'IDENTIFIER']
+#
+# ==============================================================================================================================================
+# WARNING!!!
+#   Changes to this section will impact: test_citation.test_dispatchable, test_rules.test_has_minimum_citation_requirements
+# ==============================================================================================================================================
 minimum_citation_groups:
   book:
     - ['title', 'book_title', 'IDENTIFIER']

@@ -1,3 +1,5 @@
+require 'json'
+
 module Cedilla
   
   class Broadcaster
@@ -32,27 +34,31 @@ module Cedilla
 # ----------------------------------------------------------------------------------    
 # Publishes the supplied resources to the specified client
 # ----------------------------------------------------------------------------------
-    def broadcast(client_id, *items)
+    def broadcast(client_id, service_name, final = false, *items)
       client = @clients[client_id]
+      
+      message = "\"request_id\":\"#{(final ? '1' : client_id)}\",\"time\":\"#{Time.now}\",\"service\":\"#{service_name}\""
       
       # If the client is still subscribed broadcast the information
       unless client.nil?
         items.each do |item|
           
           if item.is_a?(Cedilla::Citation)
-            puts "citation to json - #{Cedilla::Translator.citation_to_json(item)} - #{item.class}"
-            client << Cedilla::Translator.citation_to_json(item)
+            message += ",\"citation\":#{item.to_hash}"
             
           elsif item.is_a?(Cedilla::Resource)
-            puts "resources to json - #{Cedilla::Translator.resource_to_json(item)} - #{item.class}"
-            client << Cedilla::Translator.resource_to_json(item)
+            message += ",\"resource\":#{item.to_hash}"
               
+          elsif item.is_a?(Hash)
+            item.map{ |x,y| message += ",\"#{x.to_s}\":\"#{y.to_s}\"" }
+            
           else
-            puts "genric message - #{item.to_s}"
-            client << item.to_s
+            message += ",\"message\":\"#{item.to_s}\""
           end
           
         end
+        
+        client << "id: #{client_id}\nretry: 10000\ndata: {#{message.gsub('=>', ':')}}\n\n"
         
         return true
         

@@ -47,12 +47,12 @@ module Cedilla
     #DataMapper.setup(:default, 'sqlite::memory:')
 #    DataMapper.setup(:default, db_args)
 
-    $stdout.puts ".... loading controllers, models, and services"
+    $stdout.puts ".... loading core objects and models"
     Dir.glob("models/*.rb").each { |r| require_relative r }
-    Dir.glob("services/*.rb").each { |r| require_relative r }
+    Dir.glob("core/mixins/*.rb").each { |r| require_relative r }
     Dir.glob("controllers/*.rb").each { |r| require_relative r }
     Dir.glob("core/*.rb").each { |r| require_relative r }
-    Dir.glob("core/mixins/*.rb").each { |r| require_relative r }
+    Dir.glob("services/*.rb").each { |r| require_relative r }
     
     # finalize database models
 #    DataMapper::Logger.new(STDOUT, :debug)
@@ -62,7 +62,13 @@ module Cedilla
     $stdout.puts ".... loading rules"
       
     $stdout.puts ".... creating broadcaster"
-    @broadcaster = Cedilla::Broadcaster.new
+    @@broadcaster = Cedilla::Broadcaster.new
+  
+    # TODO: Determine if we need to start EventMachine in a new Thread because the EM git comments state: 
+    #       This method blocks calling thread. If you need to start EventMachine event loop from a Web app
+    #       running on a non event-driven server (Unicorn, Apache Passenger, Mongrel), do it in a separate thread.
+    #
+    #Thread.new { EventMachine.run }
   
     $stdout.puts ".... initialization complete."
   end

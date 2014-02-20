@@ -69,7 +69,7 @@ module Cedilla
                   citation.has_identifier?
                 
                 else
-                  (!citation.method("#{subrule}").call.nil? or !citation.method("#{subrule}").call == '') if citation.respond_to?("#{subrule}") 
+                  (!citation.method("#{subrule}").call.nil? and citation.method("#{subrule}").call != '') if citation.respond_to?("#{subrule}") 
                 end
               }.include?(true))
 
@@ -78,11 +78,13 @@ module Cedilla
               if rule == 'IDENTIFIER'
                 rets << !citation.has_identifier?
               else
-                rets << (!citation.method("#{rule}").call.nil? or !citation.method("#{rule}").call == '') if citation.respond_to?("#{rule}")
+                rets << (!citation.method("#{rule}").call.nil? and citation.method("#{rule}").call != '') if citation.respond_to?("#{rule}")
               end
             end
           end
         
+        else
+          rets << true
         end # rules.nil?
       
         # If no rules were validated or ANY one of the AND options failed, its false
